@@ -1,4 +1,4 @@
-package com.cocoon.cop.domain;
+package com.cocoon.cop.domain.main;
 
 import com.cocoon.cop.domain.base.TimeBaseEntity;
 import com.cocoon.cop.domain.enums.Role;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Getter
+@Table(name = "`Member`")
 public class Member extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,8 @@ public class Member extends TimeBaseEntity {
 
     @Column(nullable = false, length = 180)
     private String password;
+
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role;

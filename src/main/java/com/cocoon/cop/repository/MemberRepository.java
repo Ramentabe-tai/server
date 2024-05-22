@@ -1,6 +1,6 @@
 package com.cocoon.cop.repository;
 
-import com.cocoon.cop.domain.Member;
+import com.cocoon.cop.domain.main.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

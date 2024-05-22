@@ -1,13 +1,12 @@
-package com.cocoon.cop.domain;
+package com.cocoon.cop.domain.main;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Getter
+@Table(name = "`Category`")
 public class Category {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
