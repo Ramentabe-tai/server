@@ -2,6 +2,7 @@ package com.cocoon.cop.domain.main;
 
 import com.cocoon.cop.domain.base.TimeBaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -22,4 +23,10 @@ public class Image extends TimeBaseEntity {
     @OneToOne(mappedBy = "image", fetch = FetchType.LAZY)
     private Member member;
 
+    @Builder
+    public Image(String clientFilename, String serverFilename, Member member) {
+        this.clientFilename = clientFilename;
+        this.serverFilename = serverFilename;
+        this.member = member;
+    }
 }

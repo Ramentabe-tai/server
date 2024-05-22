@@ -4,10 +4,14 @@ import com.cocoon.cop.domain.base.TimeBaseEntity;
 import com.cocoon.cop.domain.enums.BankStatus;
 import com.cocoon.cop.domain.main.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "`Account`")
 public class Account extends TimeBaseEntity {
 
@@ -15,8 +19,7 @@ public class Account extends TimeBaseEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false)
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private Member member;
 
     @Column(name = "account_number", nullable = false, length = 30)
@@ -26,7 +29,13 @@ public class Account extends TimeBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_status")
-    private BankStatus status = BankStatus.ACTIVE;
+    private BankStatus status;
 
+    public Account(Member member, String accountNumber, int balance) {
+        this.member = member;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.status = BankStatus.ACTIVE;
+    }
 
 }
