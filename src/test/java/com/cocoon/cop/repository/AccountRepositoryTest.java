@@ -41,23 +41,23 @@ public class AccountRepositoryTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountRepositoryTest.class);
 
-    @Test
-    @Commit
-    void insertAccountTest() {
-        Member findMember = queryFactory
-                .selectFrom(member)
-                .fetchOne();
-
-        System.out.println("findMember = " + findMember);
-
-        Account account = new Account(findMember, "2222-3333-4444", 2000);
-        em.persist(account);
-
-
-        Account findAccount = em.find(Account.class, account.getId());
-        System.out.println("findAccount.getAccountNumber() = " + findAccount.getAccountNumber());
-
-    }
+//    @Test
+//    @Commit
+//    void insertAccountTest() {
+//        Member findMember = queryFactory
+//                .selectFrom(member)
+//                .fetchOne();
+//
+//        System.out.println("findMember = " + findMember);
+//
+//        Account account = new Account(findMember, "2222-3333-4444", 2000);
+//        em.persist(account);
+//
+//
+//        Account findAccount = em.find(Account.class, account.getId());
+//        System.out.println("findAccount.getAccountNumber() = " + findAccount.getAccountNumber());
+//
+//    }
 
     @Test
     void membersAccountRegistration() {

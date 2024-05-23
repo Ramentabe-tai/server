@@ -14,11 +14,11 @@ public class GoogleLoginController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/login/oauth2/google")
-    public String home(Model model) {
-        model.addAttribute("username", "jongwon");
-        return "hello";
-    }
+//    @GetMapping("/login/oauth2/google")
+//    public String home(Model model) {
+//        model.addAttribute("username", "jongwon");
+//        return "hello";
+//    }
 
 
 }

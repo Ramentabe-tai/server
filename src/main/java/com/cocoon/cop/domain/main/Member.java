@@ -59,6 +59,15 @@ public class Member extends TimeBaseEntity {
         this.role = role;
     }
 
+    /**
+     * JWTテスト用Constructor
+     */
+    public Member(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = Role.fromKey(role);
+    }
+
     @Builder
     public Member(String name, String email, String password, Role role, String phoneNumber, int rankPoint, Image image) {
         this.name = name;

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,11 @@ import java.util.Collections;
 
 @RestController
 public class LogoutController {
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
 
     @PostMapping("/member/customLogout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
