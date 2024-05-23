@@ -8,6 +8,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,27 +37,36 @@ public class SecurityConfig {
                 .requestMatchers("/static/**"); // 특정 요청과 일치하는  url 에 대한 액세스 설정
     }
 
-    // 특정 HTTP 요청에 대한 웹 기반 보안 구성
+    /**
+     * 特定HTTP RequestについてのWEB基盤セキュリティ構成
+     * 認証・認可、ログイン、ログアウト設定
+     */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { // 특정 HTTP 요청에 대해 웹 기반 보안 구성. 인증/인가 및 로그인, 로그아웃 설정
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll() // 누구나 접근 가능. requestMatchers() 에 기재된 url 은 인증, 인가 없어도 접근이 가능함
-                        .anyRequest().authenticated() // anyRequest() : 해당 코드 윗줄에서 설정한 url 이외의 요청에 대해 설정, authenticated() : 인가는 필요하지 않지만 인증이 필요함
+                        .requestMatchers("/**").permitAll() // 誰でもアクセス可能。requestMatchers() に記載されたURLは認証、認可がなくてもアクセス可能
+                        .requestMatchers("/admin").hasRole("ADMIN") // ADMIN　権限を持つユーザーだけアクセス可能
+                        .anyRequest().authenticated() // anyRequest() : 該当するコードの上の行で設定したURL以外のリクエストに対して設定, authenticated() : 認可は必要ないが認証が必要
                 )
-                .formLogin(form -> form
-                        .loginPage("/login") // 로그인 페이지 설정
-                        .defaultSuccessUrl("/") // 로그인 성공시 이동할 결로
-                )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/") // 로그아웃 성공시 이동할 경로
-                        .invalidateHttpSession(true) // 로그아웃 이후에 세션 전체 삭제 여부
-                )
+//                .formLogin(form -> form // ログインページををクライアント側で管理する場合は、設定不要
+//                        .loginPage("/login") // ログインページ設定。　設定しない場合、デフォルトのログインページが表示される
+//                        .defaultSuccessUrl("/") // ログイン成功時のリダイレクト先
+//                )
+//                .logout(logout -> logout // LogoutControllerでカスタムログアウト処理を行う場合は、設定不要
+//                        .logoutUrl("/member/logout") // ログアウトRequestURL
+//                        .logoutSuccessUrl("/") // ログアウト成功時のリダイレクト先。　
+//                        .invalidateHttpSession(true) // ログアウト時にセッションを無効化するかどうか
+//                        .permitAll()
+//                )
                 .csrf(csrf -> csrf // CSRF 설정 비활성화, 원래는 CSRF 공격을 방지하기 위해 활성화하는게 좋음
                         .disable()
                 )
                 .cors(withDefaults())
 //                .oauth2Login(Customizer.withDefaults())
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 생성 정책 설정. STATELESS : 세션을 사용하지 않음
+                )
                 .build();
     }
 

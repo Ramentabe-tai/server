@@ -67,6 +67,9 @@ class MemberRepositoryTest {
         System.out.println("findMemberName = " + findMemberName);
     }
 
+    /**
+     * QueryDSLのProjectionを利用してMember EntityをMemberDtoに変換
+     */
     @Test
     void memberToMemberDto() {
 

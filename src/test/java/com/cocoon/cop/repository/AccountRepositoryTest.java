@@ -11,6 +11,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
@@ -36,6 +38,8 @@ public class AccountRepositoryTest {
 
     @Autowired
     EntityManager em;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountRepositoryTest.class);
 
     @Test
     @Commit
@@ -72,6 +76,7 @@ public class AccountRepositoryTest {
 
         Optional<Member> findMember = memberRepository.findById(1L);
         System.out.println("=========== second query =============");
+        LOGGER.info("findMember = {}", findMember);
 
         Account memberAccount = queryFactory
                 .select(account)

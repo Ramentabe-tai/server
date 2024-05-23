@@ -5,15 +5,13 @@ import com.cocoon.cop.domain.base.TimeBaseEntity;
 import com.cocoon.cop.domain.enums.Role;
 import jakarta.persistence.*;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Table(name = "`Member`")
+@ToString(of = {"id", "name", "email", "role", "phoneNumber", "rankPoint"})
 public class Member extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
