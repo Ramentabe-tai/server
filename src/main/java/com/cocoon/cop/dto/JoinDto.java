@@ -24,7 +24,7 @@ public class JoinDto {
                 .name(name)
                 .email(email)
                 .password(password)
-                .role(Role.ROLE_USER)
+                .role(Role.fromKey("ROLE_USER").getKey())
                 .phoneNumber(phoneNumber)
                 .build();
     }

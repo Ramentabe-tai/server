@@ -4,11 +4,13 @@ import com.cocoon.cop.domain.enums.Role;
 import com.cocoon.cop.domain.main.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 public class CustomMemberDetails implements UserDetails {
@@ -21,17 +23,10 @@ public class CustomMemberDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(member.getRole().getKey()));
 
-        collection.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-
-                return member.getRole().getKey(); // return String.class
-            }
-        });
-
-        return collection;
+        return authorities;
     }
 
     @Override

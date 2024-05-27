@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -36,7 +34,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 //    @Value("${spring.jwt.expiration}")
 //    private Long expiration;
-
 
     @Override
     protected String obtainUsername(HttpServletRequest request) {
@@ -85,6 +82,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("token = {}", token);
 
         response.addHeader("Authorization", "Bearer " + token);
+
+        // 요청 속성에 토큰 저장
+        request.setAttribute("jwtToken", token);
+        request.setAttribute("userDetails", customMemberDetails);
+
+        // 인증 성공 후 필터 체인 계속
+        chain.doFilter(request, response);
     }
 
     /**

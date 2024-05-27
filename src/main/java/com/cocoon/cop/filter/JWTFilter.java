@@ -1,6 +1,5 @@
 package com.cocoon.cop.filter;
 
-import com.cocoon.cop.domain.enums.Role;
 import com.cocoon.cop.domain.main.Member;
 import com.cocoon.cop.service.security.CustomMemberDetails;
 import com.cocoon.cop.utils.JWTUtil;
