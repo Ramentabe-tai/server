@@ -7,11 +7,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
+@ToString(of = {"id", "accountNumber", "balance", "status", "member"})
 @Table(name = "`Account`")
 public class Account extends TimeBaseEntity {
 
@@ -31,10 +32,9 @@ public class Account extends TimeBaseEntity {
     @Column(name = "account_status")
     private BankStatus status;
 
-    public Account(Member member, String accountNumber, int balance) {
+    public Account(Member member, String accountNumber) {
         this.member = member;
         this.accountNumber = accountNumber;
-        this.balance = balance;
         this.status = BankStatus.ACTIVE;
     }
 

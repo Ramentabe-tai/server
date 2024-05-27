@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/member/join", "/login", "/login/v2", "/", "/logout", "/error").permitAll() // 誰でもアクセス可能。requestMatchers() に記載されたURLは認証、認可がなくてもアクセス可能
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN　権限を持つユーザーだけアクセス可能
-                        .requestMatchers("/profile").authenticated() // 認証済みのユーザーだけアクセス可能
+                        .requestMatchers("/profile", "/api/account/register/**").authenticated() // 認証済みのユーザーだけアクセス可能
                         .anyRequest().authenticated() // それ以外のリクエストは認証が必要 // 403 Forbidden
                 )
                 .formLogin(form -> form // ログインページををクライアント側で管理する場合は、設定不要
@@ -81,6 +81,7 @@ public class SecurityConfig {
                 // JWTFilterをLoginFilterの前に追加する設定。つまりLoginFilterが実行される前にJWTFilterが先に実行される
                 // これは、JWTTokenがあるRequestを先に処理し、認証されてるRequestかどうかを確認するため
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
+
                 // Filter追加、LoginFilter()引数をもらう
                 // (AuthenticationManager() methodに　authenticationConfiguration()オブジェクトを追加しないといけない) -> 登録必要
                 // SecurityConfig : AuthenticationManagerのBean登録していないため、AuthenticationManagerを取得できない -> 追加
@@ -90,7 +91,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .disable()
                 )
-                //
+                // 403 Forbidden時の処理をカスタマイズ
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.accessDeniedHandler(customAccessDeniedHandler)
                 )

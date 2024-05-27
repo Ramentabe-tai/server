@@ -87,4 +87,8 @@ public class Member extends TimeBaseEntity {
         this.rankPoint = rankPoint;
         this.image = image;
     }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }
