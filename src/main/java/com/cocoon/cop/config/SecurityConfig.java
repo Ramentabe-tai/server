@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,6 +40,7 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+
     // 스프링 시큐리티 기능 비활성화
     @Bean
     public WebSecurityCustomizer configure() { // 스프링 시큐리티의 모든 기능 (인증, 인가) 를 사용하지 않게 설정
@@ -52,11 +54,21 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomAccessDeniedHandler customAccessDeniedHandler) throws Exception {
+
+        /**
+         * SpringSecurity는 디폴트값으로 /login 로 URL 요청을 받는다. 타임리프나 SSR 을 사용하는 경우에는 .formLogin 설정에서 .loginProcessingUrl() 을 사용하여 경로를 바꿔줄 수 있지만
+         * React 나 Vue 를 사용하는 경우에는 .formLogin 설정에서 .loginProcessingUrl() 을 사용하여 경로를 바꿔줄 수 없다. 이럴 경우에는 .formLogin 설정을 사용하지 않고
+         * 밑에처럼 LoginFilter 에 .setFilterProcessesUrl() 을 사용하여 경로를 바꿔줄 수 있다.
+         * setFilterProcessesUrl() 로 login 경로를 수정하고 이 필터를 밑에 .addFilterAt() 메서드에서 사용하면 된다!!!
+         */
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        loginFilter.setFilterProcessesUrl("/api/member/login");
+
         return http
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/member/join", "/login", "/login/v2", "/", "/logout", "/error").permitAll() // 誰でもアクセス可能。requestMatchers() に記載されたURLは認証、認可がなくてもアクセス可能
+                        .requestMatchers("/member/join", "/api/member/login", "/login/v2", "/", "/logout", "/error").permitAll() // 誰でもアクセス可能。requestMatchers() に記載されたURLは認証、認可がなくてもアクセス可能
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN　権限を持つユーザーだけアクセス可能
-                        .requestMatchers("/profile", "/api/account/register/**").authenticated() // 認証済みのユーザーだけアクセス可能
+                        .requestMatchers("/profile", "/api/account/register/").authenticated() // 認証済みのユーザーだけアクセス可能
                         .anyRequest().authenticated() // それ以外のリクエストは認証が必要 // 403 Forbidden
                 )
                 .formLogin(form -> form // ログインページををクライアント側で管理する場合は、設定不要
@@ -80,14 +92,14 @@ public class SecurityConfig {
                 // JWTFilter登録
                 // JWTFilterをLoginFilterの前に追加する設定。つまりLoginFilterが実行される前にJWTFilterが先に実行される
                 // これは、JWTTokenがあるRequestを先に処理し、認証されてるRequestかどうかを確認するため
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
 
                 // Filter追加、LoginFilter()引数をもらう
                 // (AuthenticationManager() methodに　authenticationConfiguration()オブジェクトを追加しないといけない) -> 登録必要
                 // SecurityConfig : AuthenticationManagerのBean登録していないため、AuthenticationManagerを取得できない -> 追加
                 // addFilterAtで既存のUsernamePasswordAuthenticationFilterの代わりにLoginFilterが動作する
                 // ただし、ControllerでUsernamePasswordAuthenticationFilterを直接使用しているため、不要
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf
                         .disable()
                 )
