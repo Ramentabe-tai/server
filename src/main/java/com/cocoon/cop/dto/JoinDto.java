@@ -14,14 +14,17 @@ import lombok.ToString;
 public class JoinDto {
 
     private String name;
+    private String ruby;
     private String email;
     private String password;
+    private String confirmPassword;
     private String phoneNumber;
 
 
     public Member toEntity() {
         return Member.builder()
                 .name(name)
+                .ruby(ruby)
                 .email(email)
                 .password(password)
                 .role(Role.fromKey("ROLE_USER").getKey())

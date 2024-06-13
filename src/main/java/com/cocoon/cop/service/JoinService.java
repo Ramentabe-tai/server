@@ -2,7 +2,7 @@ package com.cocoon.cop.service;
 
 import com.cocoon.cop.domain.main.Member;
 import com.cocoon.cop.dto.JoinDto;
-import com.cocoon.cop.repository.MemberRepository;
+import com.cocoon.cop.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +17,7 @@ public class JoinService {
     private final BCryptPasswordEncoder passwordEncoder;
 
 
-    public void join(JoinDto joinDto) {
+    public Member join(JoinDto joinDto) {
 
         String encodedPass = passwordEncoder.encode(joinDto.getPassword());
         joinDto.setPassword(encodedPass);
@@ -28,5 +28,6 @@ public class JoinService {
 
         Member member = memberRepository.save(joinDto.toEntity());
         log.info("会員登録が完了しました　= {}", member);
+        return member;
     }
 }

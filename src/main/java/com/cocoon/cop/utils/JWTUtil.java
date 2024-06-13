@@ -25,6 +25,16 @@ public class JWTUtil {
         System.out.println("secretKey = " + secretKey);
     }
 
+
+    public Long getId(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id", Long.class);
+    }
+
     public String getEmail(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
@@ -33,6 +43,7 @@ public class JWTUtil {
                 .getPayload()
                 .get("email", String.class);
     }
+
 
     public String getRole(String token) {
 
@@ -55,12 +66,13 @@ public class JWTUtil {
                 .before(new Date());
     }
 
-    public String createJwt(String email, String role, Long expiredMs) {
+    public String createJwt(Long id, String email, String role, Long expiredMs) {
 
         log.info("System.currentTimeMillis() = {}", new Date(System.currentTimeMillis()));
         log.info("expiredMs = {}", new Date(System.currentTimeMillis() + expiredMs));
 
         return Jwts.builder()
+                .claim("id", id)
                 .claim("email", email)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))

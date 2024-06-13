@@ -1,8 +1,11 @@
 package com.cocoon.cop.controller;
 
 import com.cocoon.cop.dto.LoginDto;
+import com.cocoon.cop.dto.MemberDto;
+import com.cocoon.cop.service.MemberService;
 import com.cocoon.cop.service.security.CustomMemberDetails;
 import com.cocoon.cop.utils.JWTUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,15 +22,16 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api/member")
+@Tag(name = "Member", description = "Member API")
 public class LoginController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
+    private final MemberService memberService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@ModelAttribute LoginDto loginRequest, HttpServletRequest request) {
 
-        log.debug("loginRequest = {}", loginRequest);
+        log.info("loginRequest = {}", loginRequest);
 
         try {
             // 필터에서 생성한 토큰 가져오기
@@ -49,8 +50,13 @@ public class LoginController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
-            response.put("email", userDetails.getUsername());
+//            response.put("email", userDetails.getUsername());
             response.put("role", userDetails.getAuthorities());
+//            response.put("id", userDetails.getId());
+
+            MemberDto byIdToDto = memberService.findByIdToDto(userDetails.getId());
+            response.put("member", byIdToDto);
+
 
 
             return ResponseEntity.ok().body(response);

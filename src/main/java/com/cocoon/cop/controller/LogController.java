@@ -1,7 +1,7 @@
 package com.cocoon.cop.controller;
 
 import com.cocoon.cop.domain.main.Member;
-import com.cocoon.cop.repository.MemberRepository;
+import com.cocoon.cop.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

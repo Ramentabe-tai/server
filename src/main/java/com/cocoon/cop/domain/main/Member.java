@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Table(name = "`Member`")
-@ToString(of = {"id", "name", "email", "role", "phoneNumber", "rankPoint"})
+@ToString(of = {"id", "account" , "name", "ruby", "email", "role", "phoneNumber", "rankPoint"})
 public class Member extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,9 @@ public class Member extends TimeBaseEntity {
 
     @Column(nullable = false, length = 30)
     private String name;
+
+    // ふりがな
+    private String ruby;
 
     @Column(nullable = false, length = 180)
     private String password;
@@ -43,8 +46,8 @@ public class Member extends TimeBaseEntity {
         Todo : 会員登録時に口座を設定する場合は、Accountフィルドはnullable = falseに設定する。
         Todo : 会員登録してから口座を設定する場合は、nullable = trueで、後でUpdateする。
      */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "account_id")
     private Account account;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -60,8 +63,9 @@ public class Member extends TimeBaseEntity {
     }
 
     @Builder
-    public Member(String name, String password, String email, String role, String phoneNumber) {
+    public Member(String name, String ruby, String password, String email, String role, String phoneNumber) {
         this.name = name;
+        this.ruby = ruby;
         this.password = password;
         this.email = email;
         this.role = Role.fromKey(role);
@@ -71,15 +75,16 @@ public class Member extends TimeBaseEntity {
     /**
      * JWTテスト用Constructor
      */
-    public Member(String email, String password, String role) {
+    public Member(Long id, String email, String password, String role) {
         this.email = email;
         this.password = password;
         this.role = Role.fromKey(role);
     }
 
     @Builder
-    public Member(String name, String email, String password, Role role, String phoneNumber, int rankPoint, Image image) {
+    public Member(String name, String ruby, String email, String password, Role role, String phoneNumber, int rankPoint, Image image) {
         this.name = name;
+        this.ruby = ruby;
         this.email = email;
         this.password = password;
         this.role = role;

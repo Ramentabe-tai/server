@@ -24,6 +24,7 @@ public class LogoutController {
             request.getSession().invalidate(); // .invalidateHttpSession(true)と同じ
             SecurityContextHolder.clearContext(); // SpringSecurity ContextをClear
 
+
             // Logout成功時のResponse
             return ResponseEntity.ok().body(Collections.singletonMap("message", "Logout Success"));
         } catch (Exception e) {

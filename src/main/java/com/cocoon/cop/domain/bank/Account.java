@@ -6,13 +6,12 @@ import com.cocoon.cop.domain.main.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
-@Getter @Setter
-@ToString(of = {"id", "accountNumber", "balance", "status", "member"})
+@Getter
+@ToString(of = {"id", "accountNumber", "balance", "status"})
 @Table(name = "`Account`")
 public class Account extends TimeBaseEntity {
 
@@ -32,10 +31,19 @@ public class Account extends TimeBaseEntity {
     @Column(name = "account_status")
     private BankStatus status;
 
-    public Account(Member member, String accountNumber) {
+    public Account(Member member, String accountNumber, int balance) {
         this.member = member;
         this.accountNumber = accountNumber;
         this.status = BankStatus.ACTIVE;
+        this.balance = balance;
     }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public int subtractBalance(int balance) {
+        this.balance -= balance;
+        return this.balance;
+    }
 }

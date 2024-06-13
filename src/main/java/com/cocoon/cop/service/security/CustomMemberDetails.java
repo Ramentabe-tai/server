@@ -1,12 +1,9 @@
 package com.cocoon.cop.service.security;
 
-import com.cocoon.cop.domain.enums.Role;
 import com.cocoon.cop.domain.main.Member;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +26,8 @@ public class CustomMemberDetails implements UserDetails {
         return authorities;
     }
 
+
+
     @Override
     public String getPassword() {
         return member.getPassword();
@@ -37,6 +36,10 @@ public class CustomMemberDetails implements UserDetails {
     @Override
     public String getUsername() {
         return member.getEmail();
+    }
+
+    public Long getId() {
+        return member.getId();
     }
 
     /*

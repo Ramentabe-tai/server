@@ -21,17 +21,17 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
-
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String email1 = request.getParameter("email");
         log.info("email1 = {}", email1);
-//        // 로그인 경로에 대한 요청은 JWT 검증을 건너뛴다.
-//        if (request.getRequestURI().equals("/login")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
+        log.info("request.getRequestURI() = {}", request.getRequestURI());
+        // 로그인 경로에 대한 요청은 JWT 검증을 건너뛴다.
+        if (request.getRequestURI().equals("/api/login")) {
+            log.info("JWTFilter에서 JWT검증을 건너뜁니다");
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // RequestのHeaderからJWTを取得
         String authorization = request.getHeader("Authorization");
@@ -64,10 +64,12 @@ public class JWTFilter extends OncePerRequestFilter {
         // tokenからemail, roleを取得
         String email = jwtUtil.getEmail(token);
         String role = jwtUtil.getRole(token);
+        Long id = jwtUtil.getId(token);
+        log.info("id ={}", id);
 
 
         // Memberを生成して値をSet
-        Member member = new Member(email, "temppassword", role);
+        Member member = new Member(id, email, "temppassword", role);
 
         // MemberDetailsにMemberの情報を入れる
         CustomMemberDetails customMemberDetails = new CustomMemberDetails(member);
@@ -79,6 +81,5 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
-
     }
 }

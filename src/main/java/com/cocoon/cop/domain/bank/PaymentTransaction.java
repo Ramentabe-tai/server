@@ -4,8 +4,8 @@ import com.cocoon.cop.domain.enums.TransactionType;
 import com.cocoon.cop.domain.main.Category;
 import com.cocoon.cop.domain.main.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -39,5 +39,13 @@ public class PaymentTransaction {
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
 
-
+    @Builder
+    public PaymentTransaction(Member member, TransactionType transactionType, int amount, Category category, String message, LocalDateTime transactionDate) {
+        this.member = member;
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.category = category;
+        this.message = message;
+        this.transactionDate = transactionDate;
+    }
 }

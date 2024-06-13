@@ -7,6 +7,7 @@ import com.cocoon.cop.utils.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -66,9 +67,10 @@ public class SecurityConfig {
 
         return http
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/member/join", "/api/member/login", "/login/v2", "/", "/logout", "/error").permitAll() // 誰でもアクセス可能。requestMatchers() に記載されたURLは認証、認可がなくてもアクセス可能
+                        .requestMatchers("/member/join", "/api/member/login", "/login/v2",
+                                "/logout", "/error", "/swagger-ui-custom.html").permitAll() // 誰でもアクセス可能。requestMatchers() に記載されたURLは認証、認可がなくてもアクセス可能
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN　権限を持つユーザーだけアクセス可能
-                        .requestMatchers("/profile", "/api/account/register/").authenticated() // 認証済みのユーザーだけアクセス可能
+                        .requestMatchers("/profile", "/api/accounts/register/", "/api/accounts/**").authenticated() // 認証済みのユーザーだけアクセス可能
                         .anyRequest().authenticated() // それ以外のリクエストは認証が必要 // 403 Forbidden
                 )
                 .formLogin(form -> form // ログインページををクライアント側で管理する場合は、設定不要

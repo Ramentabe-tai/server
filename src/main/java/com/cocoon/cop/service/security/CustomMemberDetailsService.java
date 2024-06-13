@@ -1,15 +1,12 @@
 package com.cocoon.cop.service.security;
 
-import com.cocoon.cop.domain.main.Member;
-import com.cocoon.cop.repository.MemberRepository;
+import com.cocoon.cop.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
