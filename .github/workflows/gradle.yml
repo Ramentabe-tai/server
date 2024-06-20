@@ -70,7 +70,7 @@ jobs:
       id: ip
       uses: haythem/public-ip@v1.2
       with:
-        maxRetries: 5
+        maxRetries: 5 # 여길 추가하면 액션이 최대 5번까지 재시도하여 GitHub의 공용 IP주소를 가져올 수 있도록 설정함
 
     # Configure AWS Credentials (5) - AWS 접근 권한 취득(IAM)
     - name: Configure AWS Credentials
