@@ -29,6 +29,11 @@ public class PaymentTransaction {
 
     private int amount;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    private Account account;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category category;
@@ -40,8 +45,9 @@ public class PaymentTransaction {
     private LocalDateTime transactionDate;
 
     @Builder
-    public PaymentTransaction(Member member, TransactionType transactionType, int amount, Category category, String message, LocalDateTime transactionDate) {
+    public PaymentTransaction(Member member, Account account, TransactionType transactionType, int amount, Category category, String message, LocalDateTime transactionDate) {
         this.member = member;
+        this.account = account;
         this.transactionType = transactionType;
         this.amount = amount;
         this.category = category;

@@ -11,7 +11,7 @@ import lombok.ToString;
 @Entity
 @NoArgsConstructor
 @Getter
-@ToString(of = {"id", "accountNumber", "balance", "status"})
+@ToString(of = {"id", "accountNumber", "balance", "savingBalance", "status"})
 @Table(name = "`Account`")
 public class Account extends TimeBaseEntity {
 
@@ -19,16 +19,21 @@ public class Account extends TimeBaseEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(name = "account_number", nullable = false, length = 30)
     private String accountNumber;
 
+    @Column(name = "balance")
     private int balance;
 
+    @Column(name = "saving_balance")
+    private int savingBalance;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "account_status")
+    @Column(name = "status")
     private BankStatus status;
 
     public Account(Member member, String accountNumber, int balance) {
@@ -44,6 +49,11 @@ public class Account extends TimeBaseEntity {
 
     public int subtractBalance(int balance) {
         this.balance -= balance;
+        return this.balance;
+    }
+
+    public int addBalance(int amount) {
+        this.balance += amount;
         return this.balance;
     }
 }

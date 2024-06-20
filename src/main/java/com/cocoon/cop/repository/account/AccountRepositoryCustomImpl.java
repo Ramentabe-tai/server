@@ -37,7 +37,26 @@ public class AccountRepositoryCustomImpl implements AccountRepositoryCustom {
                 .where(account.id.eq(accountId))
                 .fetchOne();
 
+//        assert memberAccount != null;
         return memberAccount.subtractBalance(amount);
+    }
+
+    @Override
+    public int balance(Long accountId) {
+        return queryFactory
+                .select(account.balance)
+                .from(account)
+                .where(account.id.eq(accountId))
+                .fetchOne().intValue();
+    }
+
+    @Override
+    public int savingBalance(Long accountId) {
+        return queryFactory
+                .select(account.savingBalance)
+                .from(account)
+                .where(account.id.eq(accountId))
+                .fetchOne().intValue();
     }
 
 }

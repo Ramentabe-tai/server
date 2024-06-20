@@ -46,8 +46,7 @@ public class Member extends TimeBaseEntity {
         Todo : 会員登録時に口座を設定する場合は、Accountフィルドはnullable = falseに設定する。
         Todo : 会員登録してから口座を設定する場合は、nullable = trueで、後でUpdateする。
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "account_id")
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Account account;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -76,6 +75,7 @@ public class Member extends TimeBaseEntity {
      * JWTテスト用Constructor
      */
     public Member(Long id, String email, String password, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = Role.fromKey(role);

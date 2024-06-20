@@ -1,14 +1,9 @@
-# 베이스 이미지 Amazon Corretto 17로 설정 (애플리케이션 Java Vendor)
-FROM openjdk:17.0.2-jdk-slim-buster AS bulder
+FROM openjdk:17-jdk-slim
 
+WORKDIR /app
 
-# 작업 디렉토리 설정 (원하는 경로로 수정 가능)
-WORKDIR /shboard
+COPY build/libs/cop-0.0.1-SNAPSHOT.jar app.jar
 
-# 변수 설정
-ARG JAR_FILE=./build/libs/*.jar
+EXPOSE 8080
 
-# 빌드한 JAR 파일 원하는 경로에 복사
-COPY ${JAR_FILE} /shboard/shboard.jar
-
-ENTRYPOINT ["java", "-jar", "/cop.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

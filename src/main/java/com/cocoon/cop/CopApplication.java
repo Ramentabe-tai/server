@@ -1,13 +1,11 @@
 package com.cocoon.cop;
 
 import com.cocoon.cop.domain.bank.Account;
-import com.cocoon.cop.domain.bank.SavingAccount;
 import com.cocoon.cop.domain.main.Category;
 import com.cocoon.cop.domain.main.Member;
 import com.cocoon.cop.repository.account.AccountRepository;
 import com.cocoon.cop.repository.category.CategoryRepository;
 import com.cocoon.cop.repository.member.MemberRepository;
-import com.cocoon.cop.repository.savingaccount.SavingAccountRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -26,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 
+
 @SpringBootApplication
 @EnableJpaAuditing // @CreatedDate 사용을 위한 추가
 @RequiredArgsConstructor // PostConstruct 를 위한 추가
@@ -36,7 +35,6 @@ public class CopApplication implements ApplicationRunner {
 	private final MemberRepository memberRepository;
 	private final AccountRepository accountRepository;
 	private final BCryptPasswordEncoder passwordEncoder;
-	private final SavingAccountRepository savingAccountRepository;
 	private final CategoryRepository categoryRepository;
 
 	@Value("${spring.security.user.name}")
@@ -62,58 +60,53 @@ public class CopApplication implements ApplicationRunner {
 		LOGGER.info(" ");
 	}
 
-//	@PostConstruct
-//	@Transactional
-//	public void init() {
-//		Member admin = new Member().builder()
-//				.email("jongwon3340@gmail.com")
-//				.password(passwordEncoder.encode("dnflwlq1408"))
-//				.role("ROLE_ADMIN")
-//				.name("CHOI JONGWON")
-//				.ruby("チェ　チョンウォン")
-//				.phoneNumber("010-3333-4444")
-//				.build();
-//
-//		Member user = new Member().builder()
-//				.email("testuser@gmail.com")
-//				.password(passwordEncoder.encode("testuser"))
-//				.role("ROLE_USER")
-//				.name("TEST USER")
-//				.ruby("テスト　ユーザー")
-//				.phoneNumber("010-1111-2222")
-//				.build();
-//
-//
-//		// Member 가 연관관계의 주인임
-//		Account adminAccount = new Account(admin, "5627693", 850000);
-//		admin.setAccount(adminAccount);
-//		adminAccount.setMember(admin);
-//
-//		SavingAccount savingAccount = new SavingAccount().builder()
-//				.member(admin)
-//				.balance(0)
-//				.savingAccountNumber("79382551")
-//				.createdDate(LocalDateTime.now())
-//				.build();
-//
-//		memberRepository.save(admin);
-//		memberRepository.save(user);
-//
-//		SavingAccount savedAccount = savingAccountRepository.save(savingAccount);
-//		LOGGER.info("savedAccount = {}", savedAccount);
-//
-//
-//		Category category = new Category("food");
-//		categoryRepository.save(category);
-//
-//		Category category1 = new Category("shopping");
-//		categoryRepository.save(category1);
-//
-//		Category category2 = new Category("clothes");
-//		categoryRepository.save(category2);
-//
-//		Category category3 = new Category("hobby");
-//		categoryRepository.save(category3);
-//
-//	}
+	@PostConstruct
+	@Transactional
+	public void init() {
+		Member admin = new Member().builder()
+				.email("jongwon3340@gmail.com")
+				.password(passwordEncoder.encode("dnflwlq1408"))
+				.role("ROLE_ADMIN")
+				.name("CHOI JONGWON")
+				.ruby("チェ　チョンウォン")
+				.phoneNumber("010-3333-4444")
+				.build();
+
+		Member user = new Member().builder()
+				.email("testuser@gmail.com")
+				.password(passwordEncoder.encode("testuser"))
+				.role("ROLE_USER")
+				.name("TEST USER")
+				.ruby("テスト　ユーザー")
+				.phoneNumber("010-1111-2222")
+				.build();
+
+
+		// Member 가 연관관계의 주인임
+		Account adminAccount = new Account(admin, "5627693", 850000);
+		admin.setAccount(adminAccount);
+		adminAccount.setMember(admin);
+
+		Account userAccount = new Account(admin, "4583295", 2000000);
+		user.setAccount(userAccount);
+		userAccount.setMember(user);
+
+		memberRepository.save(admin);
+		memberRepository.save(user);
+
+
+
+		Category category = new Category("food");
+		categoryRepository.save(category);
+
+		Category category1 = new Category("shopping");
+		categoryRepository.save(category1);
+
+		Category category2 = new Category("clothes");
+		categoryRepository.save(category2);
+
+		Category category3 = new Category("hobby");
+		categoryRepository.save(category3);
+
+	}
 }

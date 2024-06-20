@@ -4,12 +4,16 @@ import com.cocoon.cop.dto.MemberDto;
 import com.cocoon.cop.repository.member.MemberRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @SpringBootTest
@@ -28,6 +32,7 @@ class MemberRepositoryTest {
     EntityManager em;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberRepositoryTest.class);
+
 
 //
 //    @Test
@@ -80,14 +85,6 @@ class MemberRepositoryTest {
 //        LOGGER.info("memberDtoList = {}", memberDtoList);
 //
 //    }
-
-
-    @Test
-    void findByIdToDto() {
-        MemberDto memberDto = memberRepository.findByIdToDto(1L);
-        LOGGER.info("memberDto = {}", memberDto);
-    }
-
 
 
 

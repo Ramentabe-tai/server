@@ -21,7 +21,7 @@ public class MemberDto {
 //    private Long profileImageId;
 
 
-    public MemberDto(Long id, String name, String ruby, String email, String phoneNumber, int rankPoint, Long accountId) {
+    public MemberDto(Long id, String name, String ruby, String email, String phoneNumber, int rankPoint, Long accountId, Long savingAccountId) {
         this.id = id;
         this.name = name;
         this.ruby = ruby;

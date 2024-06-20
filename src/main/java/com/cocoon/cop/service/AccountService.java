@@ -9,8 +9,8 @@ import com.cocoon.cop.dto.MemberAccountRegisterDto;
 import com.cocoon.cop.repository.account.AccountRepository;
 import com.cocoon.cop.repository.category.CategoryRepository;
 import com.cocoon.cop.repository.member.MemberRepository;
-import com.cocoon.cop.repository.savingaccount.SavingAccountRepository;
 import com.cocoon.cop.repository.PaymentTransactionRepository;
+import com.cocoon.cop.request.IncomeRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,6 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
-    private final PaymentTransactionRepository transactionRepository;
     private final PaymentTransactionRepository paymentTransactionRepository;
 
 
@@ -39,11 +38,6 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public int balance(Long accountId) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
-        return account.getBalance();
-    }
 
     @Transactional(rollbackOn = Exception.class)
     public void expenseWithCategory(Long memberId, Long accountId, int amount, String categoryName) {
@@ -65,5 +59,38 @@ public class AccountService {
 
         paymentTransactionRepository.save(paymentTransaction);
 
+    }
+
+    public int getBalance(Long accountId) {
+        return accountRepository.balance(accountId);
+    }
+
+    public Integer getSavingBalance(Long accountId) {
+        return accountRepository.savingBalance(accountId);
+    }
+
+    @Transactional(rollbackOn = IllegalArgumentException.class)
+    public int income(Long accountId, IncomeRequest incomeRequest) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+
+        int amount = incomeRequest.amount();
+        int balance = account.addBalance(amount); // Dirty Checking
+        log.info("balance = {}", balance);
+
+        // 돈 적금하고, PaymentTransaction 에 이력저장
+        PaymentTransaction paymentTransaction = new PaymentTransaction().builder()
+                .member(account.getMember())
+                .account(account)
+                .amount(amount)
+                .transactionType(TransactionType.DEPOSIT)
+                .message(incomeRequest.memo())
+                .transactionDate(LocalDateTime.now())
+                .build();
+
+        paymentTransactionRepository.save(paymentTransaction);
+
+        return balance;
     }
 }

@@ -4,14 +4,12 @@ import com.cocoon.cop.dto.LoginDto;
 import com.cocoon.cop.dto.MemberDto;
 import com.cocoon.cop.service.MemberService;
 import com.cocoon.cop.service.security.CustomMemberDetails;
-import com.cocoon.cop.utils.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +48,7 @@ public class LoginController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
-//            response.put("email", userDetails.getUsername());
             response.put("role", userDetails.getAuthorities());
-//            response.put("id", userDetails.getId());
 
             MemberDto byIdToDto = memberService.findByIdToDto(userDetails.getId());
             response.put("member", byIdToDto);

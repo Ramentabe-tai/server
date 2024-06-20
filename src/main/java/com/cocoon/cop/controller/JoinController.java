@@ -1,9 +1,7 @@
 package com.cocoon.cop.controller;
 
-import com.cocoon.cop.domain.bank.SavingAccount;
 import com.cocoon.cop.domain.main.Member;
 import com.cocoon.cop.dto.JoinDto;
-import com.cocoon.cop.repository.savingaccount.SavingAccountRepository;
 import com.cocoon.cop.service.JoinService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -11,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -25,13 +24,12 @@ public class JoinController {
     private static final Logger logger = LoggerFactory.getLogger(JoinController.class);
 
     private final JoinService joinService;
-    private final SavingAccountRepository savingAccountRepository;
 
     /**
      * TODO: JoinDto validation 추가해야 함
      */
     @PostMapping("/member/join")
-    public ResponseEntity<?> join(@ModelAttribute JoinDto joinDto) {
+    public ResponseEntity<?> join(@RequestBody JoinDto joinDto) {
 
         logger.info("JoinDto = {}", joinDto);
 
@@ -46,22 +44,22 @@ public class JoinController {
             response.put("phoneNumber", joinedMember.getPhoneNumber());
 
 
-            SavingAccount memberSavingAccount = new SavingAccount().builder()
-                    .savingAccountNumber("78834951") //　発表時、会員登録部分はパスするので、貯金用口座番号は臨時で設定しておいた
-                    .member(joinedMember)
-                    .balance(0)
-                    .createdDate(LocalDateTime.now())
-                    .build();
-
-            savingAccountRepository.save(memberSavingAccount);
-            logger.info("memberSavingAccount = {}", memberSavingAccount);
-
-            response.put("savingAccountId", memberSavingAccount.getId());
+//            SavingAccount memberSavingAccount = new SavingAccount().builder()
+//                    .savingAccountNumber("78834951") //　発表時、会員登録部分はパスするので、貯金用口座番号は臨時で設定しておいた
+//                    .member(joinedMember)
+//                    .balance(0)
+//                    .createdDate(LocalDateTime.now())
+//                    .build();
+//
+//            savingAccountRepository.save(memberSavingAccount);
+//            logger.info("memberSavingAccount = {}", memberSavingAccount);
+//
+//            response.put("savingAccountId", memberSavingAccount.getId());
 
 
             return ResponseEntity.ok().body(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Join Failed"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 }

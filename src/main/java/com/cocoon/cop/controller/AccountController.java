@@ -2,17 +2,17 @@ package com.cocoon.cop.controller;
 
 import com.cocoon.cop.domain.bank.Account;
 import com.cocoon.cop.dto.MemberAccountRegisterDto;
+import com.cocoon.cop.request.IncomeRequest;
 import com.cocoon.cop.service.AccountService;
-import com.cocoon.cop.service.SavingAccountService;
 import com.cocoon.cop.utils.JWTUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +23,6 @@ public class AccountController {
     private final JWTUtil jwtUtil;
 
     private final AccountService accountService;
-    private final SavingAccountService savingAccountService;
 
     @PostMapping("/register/{memberId}")
     public ResponseEntity<?> register(@PathVariable("memberId") Long memberId, @RequestBody MemberAccountRegisterDto memberAccountRegisterDto) {
@@ -33,29 +32,40 @@ public class AccountController {
         return ResponseEntity.ok().body("ok");
     }
 
-    @GetMapping("/{account_Id}/balance")
-    public ResponseEntity<?> balance(@PathVariable("account_Id") Long accountId, HttpServletRequest request,
-                                     @RequestHeader("Authorization") String authorizationHeader) {
 
-        return ResponseEntity.ok().body(Collections.singletonMap("balance", accountService.balance(accountId)));
+    /**
+     * 口座残高取得
+     */
+    @GetMapping("/{account_id}/balance")
+    public ResponseEntity<Map<String, Integer>> balance(@PathVariable("account_id") Long accountId) {
+        return ResponseEntity.ok().body(Collections.singletonMap("balance", accountService.getBalance(accountId)));
     }
 
+
+    /**
+     * 貯金額取得
+     */
+    @GetMapping("/{account_id}/saving-balance")
+    public ResponseEntity<Map<String, Integer>> savingBalance(@PathVariable("account_id") Long accountId) {
+        return ResponseEntity.ok().body(Collections.singletonMap("savingBalance", accountService.getSavingBalance(accountId)));
+    }
+
+    /**
+     * 貯金
+     * Request json body { "amount": 1000 }
+     */
     @PostMapping("/{account_Id}/income")
-    public ResponseEntity<?> income(@PathVariable("account_Id") Long accountId, @RequestParam("amount") int amount,
-                                    @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> income(@PathVariable("account_Id") Long accountId, @RequestBody IncomeRequest incomeRequest) {
 
-        String jwtToken = null;
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwtToken = authorizationHeader.substring(7);
-            log.info("jwtToken = {}", jwtToken);
+        Map<String, Object> response = new LinkedHashMap<>();
+        try {
+            accountService.income(accountId, incomeRequest);
+            response.put("deposit", incomeRequest.amount());
+            response.put("message", "transaction completed");
+        } catch (IllegalArgumentException accountNotFound) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "account not found"));
         }
-
-        Long memberId = jwtUtil.getId(jwtToken);
-
-
-        savingAccountService.income(memberId, accountId, amount);
-
-        return ResponseEntity.ok().body(Collections.singletonMap("message", "income success"));
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/{account_Id}/expense")
