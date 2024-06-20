@@ -1,6 +1,8 @@
 package com.cocoon.cop.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -16,6 +19,7 @@ public class JWTUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JWTUtil.class);
     private SecretKey secretKey;
+
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
         secretKey = new SecretKeySpec(
@@ -64,6 +68,16 @@ public class JWTUtil {
                 .getPayload()
                 .getExpiration()
                 .before(new Date());
+    }
+
+
+    public Long extractMemberId(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.parseLong(claims.get("id").toString());
     }
 
     public String createJwt(Long id, String email, String role, Long expiredMs) {
