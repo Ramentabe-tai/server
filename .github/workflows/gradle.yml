@@ -89,7 +89,8 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ubuntu
-        password: ${{ secrets.EC2_PASSWORD }} 
+        # password: ${{ secrets.EC2_PASSWORD }} 
+        key: ${{ secrets.KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         timeout: 60s
         script: |
