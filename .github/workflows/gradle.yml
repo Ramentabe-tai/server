@@ -69,6 +69,8 @@ jobs:
     - name: get GitHub IP 
       id: ip
       uses: haythem/public-ip@v1.2
+      with:
+        maxRetries: 5
 
     # Configure AWS Credentials (5) - AWS 접근 권한 취득(IAM)
     - name: Configure AWS Credentials
