@@ -65,6 +65,43 @@ jobs:
     - name: docker image build
       run: docker buildx build --platform linux/amd64,linux/arm64 -t johnny1004/ramentabetai --push .
 
+    # GET GitHub IP (4)
+    - name: get GitHub IP 
+      id: ip
+      uses: haythem/public-ip@v1.2
+
+    # Configure AWS Credentials (5) - AWS 접근 권한 취득(IAM)
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with: 
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+    
+    # Add github ip to AWS (6)
+    - name: Add GitHub IP to AWS
+      run: |
+        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+    
+    # AWS EC2 Server Connect & Docker 명령어 실행 (7)
+    - name: AWS EC2 Connection
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        password: ${{ secrets.EC2_PASSWORD }} 
+        port: ${{ secrets.EC2_SSH_PORT }}
+        timeout: 60s
+        script: |
+          sudo docker stop boot-prac-ci
+          sudo docker rm boot-prac-ci
+          sudo docker run -it -d -p 8080:8080 --name boot-prac-ci lucaskang134/boot-prac-ci
+    
+    # REMOVE Github IP FROM security group (8)
+    - name: Remove IP FROM security group
+      run: |
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
