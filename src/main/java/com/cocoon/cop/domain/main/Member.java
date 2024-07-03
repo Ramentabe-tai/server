@@ -7,11 +7,13 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
+import java.awt.*;
+
 @Entity
 @NoArgsConstructor
 @Getter
 @Table(name = "`Member`")
-@ToString(of = {"id", "account" , "name", "ruby", "email", "role", "phoneNumber", "rankPoint"})
+@ToString(of = {"id", "account" , "name", "ruby", "email", "role", "phoneNumber", "expPoint"})
 public class Member extends TimeBaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +37,11 @@ public class Member extends TimeBaseEntity {
     @Column(name = "phone_number", nullable = false, length = 30)
     private String phoneNumber;
 
-    @Column(name = "rank_point")
-    private int rankPoint;
+    @Column(name = "exp_point")
+    private int expPoint;
+
+    @Column(name = "level", columnDefinition = "INT NOT NULL DEFAULT 1")
+    private int level;
 
     /*
         通常、口座は特定のユーザーに属しているため、Member EntityからAccount Entityへの関係が自然に一方向に形成される。
@@ -47,11 +52,9 @@ public class Member extends TimeBaseEntity {
         Todo : 会員登録してから口座を設定する場合は、nullable = trueで、後でUpdateする。
      */
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "profile_image_id", referencedColumnName = "image_id")
-    private Image image;
 
     /**
      * テスト用Constructor
@@ -69,6 +72,7 @@ public class Member extends TimeBaseEntity {
         this.email = email;
         this.role = Role.fromKey(role);
         this.phoneNumber = phoneNumber;
+        this.level = 1;
     }
 
     /**
@@ -82,18 +86,22 @@ public class Member extends TimeBaseEntity {
     }
 
     @Builder
-    public Member(String name, String ruby, String email, String password, Role role, String phoneNumber, int rankPoint, Image image) {
+    public Member(String name, String ruby, String email, String password, Role role, String phoneNumber, int level, int expPoint) {
         this.name = name;
         this.ruby = ruby;
         this.email = email;
         this.password = password;
         this.role = role;
         this.phoneNumber = phoneNumber;
-        this.rankPoint = rankPoint;
-        this.image = image;
+        this.level = level;
+        this.expPoint = expPoint;
     }
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public void addExpPoint(int expPoint) {
+        this.expPoint += expPoint;
     }
 }

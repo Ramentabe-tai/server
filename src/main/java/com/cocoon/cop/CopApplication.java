@@ -63,7 +63,7 @@ public class CopApplication implements ApplicationRunner {
 	@PostConstruct
 	@Transactional
 	public void init() {
-		Member admin = new Member().builder()
+		Member admin = Member.builder()
 				.email("jongwon3340@gmail.com")
 				.password(passwordEncoder.encode("dnflwlq1408"))
 				.role("ROLE_ADMIN")
@@ -72,7 +72,7 @@ public class CopApplication implements ApplicationRunner {
 				.phoneNumber("010-3333-4444")
 				.build();
 
-		Member user = new Member().builder()
+		Member user = Member.builder()
 				.email("testuser@gmail.com")
 				.password(passwordEncoder.encode("testuser"))
 				.role("ROLE_USER")
@@ -95,18 +95,6 @@ public class CopApplication implements ApplicationRunner {
 		memberRepository.save(user);
 
 
-
-		Category category = new Category("food");
-		categoryRepository.save(category);
-
-		Category category1 = new Category("shopping");
-		categoryRepository.save(category1);
-
-		Category category2 = new Category("clothes");
-		categoryRepository.save(category2);
-
-		Category category3 = new Category("hobby");
-		categoryRepository.save(category3);
 
 	}
 }

@@ -1,9 +1,12 @@
 package com.cocoon.cop.domain.main;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,10 +26,17 @@ public class MemberMission {
     @JoinColumn(name = "mission_id", referencedColumnName = "mission_id")
     private Mission mission;
 
-    @Column(name = "status", length = 30)
-    private String status;
+    @Column(name = "is_completed", columnDefinition = "TINYINT(1) DEFAULT 0")
+    private Boolean isCompleted;
 
     @Column(name = "completed_date")
-    private int LocalDateTime;
+    private LocalDateTime completedDate;
 
+    @Builder
+    public MemberMission(Member member, Mission mission, Boolean isCompleted, LocalDateTime completedDate) {
+        this.member = member;
+        this.mission = mission;
+        this.isCompleted = isCompleted;
+        this.completedDate = completedDate;
+    }
 }

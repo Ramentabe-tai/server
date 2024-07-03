@@ -53,7 +53,7 @@ public class Account extends TimeBaseEntity {
     }
 
     public int addBalance(int amount) {
-        this.balance += amount;
-        return this.balance;
+        this.savingBalance += amount;
+        return this.savingBalance;
     }
 }

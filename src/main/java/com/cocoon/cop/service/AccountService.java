@@ -9,7 +9,8 @@ import com.cocoon.cop.dto.MemberAccountRegisterDto;
 import com.cocoon.cop.repository.account.AccountRepository;
 import com.cocoon.cop.repository.category.CategoryRepository;
 import com.cocoon.cop.repository.member.MemberRepository;
-import com.cocoon.cop.repository.PaymentTransactionRepository;
+import com.cocoon.cop.repository.paymenttransaction.PaymentTransactionRepository;
+import com.cocoon.cop.request.ExpenseRequest;
 import com.cocoon.cop.request.IncomeRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -80,12 +81,40 @@ public class AccountService {
         log.info("balance = {}", balance);
 
         // 돈 적금하고, PaymentTransaction 에 이력저장
-        PaymentTransaction paymentTransaction = new PaymentTransaction().builder()
+        PaymentTransaction paymentTransaction = PaymentTransaction.builder()
                 .member(account.getMember())
                 .account(account)
                 .amount(amount)
                 .transactionType(TransactionType.DEPOSIT)
                 .message(incomeRequest.memo())
+                .transactionDate(LocalDateTime.now())
+                .build();
+
+        paymentTransactionRepository.save(paymentTransaction);
+
+        return balance;
+    }
+
+    @Transactional(rollbackOn = IllegalArgumentException.class)
+    public int expense(Long accountId, ExpenseRequest expenseRequest) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        Category category = categoryRepository.findById(expenseRequest.categoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        int amount = expenseRequest.amount();
+        int balance = account.subtractBalance(amount); // Dirty Checking
+        log.info("balance = {}", balance);
+
+        // PaymentTransaction 에 이력 저장
+        PaymentTransaction paymentTransaction = PaymentTransaction.builder()
+                .member(account.getMember())
+                .account(account)
+                .category(category)
+                .amount(amount)
+                .transactionType(TransactionType.WITHDRAWAL)
+                .message(expenseRequest.memo())
                 .transactionDate(LocalDateTime.now())
                 .build();
 

@@ -26,9 +26,9 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                                 member.name,
                                 member.ruby,
                                 member.email,
-                                member.phoneNumber,
-                                member.rankPoint,
-                                member.account.id.as("accountId")
+                                member.phoneNumber.as("phoneNumber"),
+                                member.expPoint,
+                                member.account.id.as("accountId").longValue()
                         )
                 ).from(member)
                 .where(member.id.eq(memberId))

@@ -8,7 +8,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString(of = {"id", "title", "description", "expPoint"})
+@ToString
 public class Mission {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

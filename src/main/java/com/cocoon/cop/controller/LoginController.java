@@ -49,6 +49,7 @@ public class LoginController {
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("role", userDetails.getAuthorities());
+            log.info("userDetails.getId() = {}", userDetails.getId());
 
             MemberDto byIdToDto = memberService.findByIdToDto(userDetails.getId());
             response.put("member", byIdToDto);
