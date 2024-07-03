@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentTransactionDto {
 
-    private Integer month;
+    private String month;
     private int amount;
 
     // 필드 이름을 동적으로 변경하기 위한 메서드 추가

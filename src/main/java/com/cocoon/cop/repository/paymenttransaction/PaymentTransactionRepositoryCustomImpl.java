@@ -4,6 +4,7 @@ import com.cocoon.cop.domain.enums.TransactionType;
 import com.cocoon.cop.dto.PaymentTransactionDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -26,12 +27,15 @@ public class PaymentTransactionRepositoryCustomImpl implements PaymentTransactio
                 .select(
                         Projections.constructor(
                                 PaymentTransactionDto.class,
-                                paymentTransaction.transactionDate.month().as("month"),
+                                Expressions.stringTemplate(
+                                        "DATE_FORMAT({0}, '%Y-%m')", paymentTransaction.transactionDate).as("month"),
                                 paymentTransaction.amount.sum().as("amount")
-                )).from(paymentTransaction)
+                        ))
+                .from(paymentTransaction)
                 .where(paymentTransaction.transactionType.eq(transactionType)
                         .and(paymentTransaction.account.id.eq(accountId)))
-                .groupBy(paymentTransaction.transactionDate.month())
+                .groupBy(Expressions.stringTemplate(
+                        "DATE_FORMAT({0}, '%Y-%m')", paymentTransaction.transactionDate))
                 .fetch();
     }
 }
