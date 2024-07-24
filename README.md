@@ -29,7 +29,7 @@ cd yourproject
 ## Member Request
 
 ### Endpoints
-| HTTP Method | Endpoint          | 설명      |
+| HTTP Method | Endpoint          | 説明      |
 |-------------|-------------------|-----------|
 | POST        | /api/member/join  | 会員登録 |
 | POST        | /api/member/login | ログイン    |
