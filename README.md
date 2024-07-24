@@ -1,5 +1,30 @@
 # Ramentabetai / server ( Spring Boot, JPA, Query DSL )
 
+### Prerequisites
+
+You will need the following:
+- [Java JDK 17](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
+- [Gradle 7](https://gradle.org/install/)
+
+
+1. Clone the project:
+   ```bash
+   git clone [https://github.com/yourusername/yourproject.git](https://github.com/Ramentabe-tai/server)
+   cd yourproject
+
+2. Install dependencies and build:
+```json
+./gradlew build
+```
+
+3. Run the Spring Boot application:
+```json
+./gradlew bootRun
+```
+
+4. The application will run at `http://localhost:8080`
+ 
+
 ## Member Request
 
 ### Endpoints
@@ -13,21 +38,21 @@
 #### Request Example
 ```json
 {
-  "name": "石原 さとみ",
-  "ruby": "イシハラ サトミ",
-  "email": "example@example.com",
-  "password": "password1004",
-  "confirmPassword": "password1004",
-  "phoneNumber": "08047830333"
+    "name": "石原 さとみ",
+    "ruby": "イシハラ サトミ",
+    "email": "example@example.com",
+    "password": "password1004",
+    "confirmPassword": "password1004",
+    "phoneNumber": "08047830333"
 }
 ```
 
 #### Response Example
 ```json
 {
-		"id" : 1,
+    "id" : 1,
     "name": "石原　さとみ",
-		"ruby" : "イシハラ サトミ",
+    "ruby" : "イシハラ サトミ",
     "email": "satomi1004@gmail.com",
     "phoneNumber": "08047830333",
     "savingAccountId": 1
@@ -45,7 +70,7 @@
     "password": "password1004"
     
     "email" : "",
-    "password": "dnflwlq1408"
+    "password": "helloho1200"
 }
 ```
 
