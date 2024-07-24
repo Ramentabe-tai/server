@@ -1,4 +1,4 @@
-# Back-end Memo
+# Ramentabetai / server ( Spring Boot, JPA, Query DSL )
 
 ## Member Request
 
@@ -131,8 +131,8 @@
 #### Request Example
 ```json
 {
-		"amount": 3000,
-		"memo" : "test income"
+    "amount": 3000,
+    "memo" : "test income"
 }
 ```
 #### Response Example
@@ -188,27 +188,27 @@
 {
     "data": [
         {
-            "month": 1,
+            "month": "2024-01",
             "deposit": 27000
         },
         {
-            "month": 2,
+            "month": "2024-02",
             "deposit": 17500
         },
         {
-            "month": 3,
+            "month": "2024-03",
             "deposit": 27000
         },
         {
-            "month": 4,
+            "month": "2024-04",
             "deposit": 24000
         },
         {
-            "month": 5,
+            "month": "2024-05",
             "deposit": 19000
         },
         {
-            "month": 6,
+            "month": "2024-06",
             "deposit": 16500
         }
     ]
@@ -225,27 +225,27 @@
 {
     "data": [
         {
-            "month": 1,
+            "month": "2024-01",
             "spending": 15000
         },
         {
-            "month": 2,
+            "month": "2024-02",
             "spending": 14500
         },
         {
-            "month": 3,
+            "month": "2024-03",
             "spending": 14250
         },
         {
-            "month": 4,
+            "month": "2024-04",
             "spending": 19000
         },
         {
-            "month": 5,
+            "month": "2024-05",
             "spending": 21000
         },
         {
-            "month": 6,
+            "month": "2024-06",
             "spending": 12120
         }
     ]
