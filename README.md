@@ -144,7 +144,7 @@
 
 `` 該当するaccount_idが登録されてない時 ``
 {
-		"message": "Account not found"
+    "message": "Account not found"
 }
 ```
 
@@ -153,9 +153,9 @@
 #### Request Example
 ```json
 {
-		"amount" : 2000, 
-		"memo" : "焼きそば食べた", 
-		"categoryId": 1
+    "amount" : 2000, 
+    "memo" : "焼きそば食べた", 
+    "categoryId": 1
 }
 ```
 #### Response Example
@@ -167,12 +167,12 @@
 
 `` 該当するaccount_idが登録されてない時 ``
 {
-		"message": "Account not found"
+    "message": "Account not found"
 }
 
 `` 該当するcategoryIdが登録されてない時 ``
 {
-		"message": "Category not found"
+    "message": "Category not found"
 }
 ```
 
@@ -251,6 +251,144 @@
     ]
 }
 ```
+
+### /api/categories
+
+#### Request Example
+```json
+`` Request Data なし ``
+```
+
+#### Response Example
+```json
+[
+    {
+        "categoryId": 1,
+        "categoryName": "食べ物"
+    },
+    {
+        "categoryId": 2,
+        "categoryName": "ショッピング"
+    },
+    {
+        "categoryId": 3,
+        "categoryName": "服"
+    },
+    {
+        "categoryId": 4,
+        "categoryName": "趣味"
+    },
+    {
+        "categoryId": 5,
+        "categoryName": "公共料金"
+    },
+    {
+        "categoryId": 6,
+        "categoryName": "その他"
+    }
+]
+```
+
+### /api/categories
+
+#### Request Example
+```json
+`` Request Data なし ``
+```
+
+
+#### Response Example
+```json
+{
+    "missions": [
+        {
+            "missionId": 1,
+            "missionTitle": "水筒を持ってこよう",
+            "missionDescription": "水筒に水を入れる。約200円節約！",
+            "expPoint": 100,
+            "isCompleted": true,
+            "completedDate": "2024-07-03T15:36:56.801186"
+        },
+        {
+            "missionId": 2,
+            "missionTitle": "冷房の設定温度を1度上げる",
+            "missionDescription": "約500円節約！",
+            "expPoint": 200,
+            "isCompleted": null,
+            "completedDate": null
+        },
+        {
+            "missionId": 3,
+            "missionTitle": "晩ご飯はカレーを作りましょう",
+            "missionDescription": "3回分の食事が節約！",
+            "expPoint": 300,
+            "isCompleted": null,
+            "completedDate": null
+        },
+        {
+            "missionId": 4,
+            "missionTitle": "買い物はできるだけサンディで済ませる",
+            "missionDescription": "あらゆる物が安いサンディで買い出しを済ませて出費を抑える",
+            "expPoint": 200,
+            "isCompleted": null,
+            "completedDate": null
+        },
+        {
+            "missionId": 5,
+            "missionTitle": "コンビニ食品禁止チャレンジ",
+            "missionDescription": "自炊を行える時間が無い時は納豆や豆腐といった手間がかからない料理で済ませる",
+            "expPoint": 300,
+            "isCompleted": null,
+            "completedDate": null
+        },
+        {
+            "missionId": 6,
+            "missionTitle": "自炊チャレンジ",
+            "missionDescription": "できるだけ安いスーパーで食材を買って自炊を行い、食費を抑える",
+            "expPoint": 300,
+            "isCompleted": null,
+            "completedDate": null
+        }
+    ]
+}
+```
+### /api/member/{member_id}/mission/{mission_id}
+
+#### Request Example
+```json
+`` Request Data なし ``
+```
+
+#### Response Example
+```json
+{
+    "message": "Mission status updated successfully",
+    "is_completed": true,
+    "exp_point": 100
+}
+```
+
+### /api/member/{member_id}/exp
+
+#### Request Example
+```json
+`` Request Data なし ``
+```
+
+#### Response Example
+```json
+{
+    "memberId": 1,
+    "level": 1,
+    "exp": 100
+}
+```
+
+
+
+
+
+
 
 
 
