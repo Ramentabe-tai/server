@@ -8,9 +8,10 @@ You will need the following:
 
 
 1. Clone the project:
-   ```bash
-   git clone [https://github.com/yourusername/yourproject.git](https://github.com/Ramentabe-tai/server)
-   cd yourproject
+```bash
+git clone [https://github.com/yourusername/yourproject.git](https://github.com/Ramentabe-tai/server)
+cd yourproject
+```
 
 2. Install dependencies and build:
 ```json
